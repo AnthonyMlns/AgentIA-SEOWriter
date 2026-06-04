@@ -1,0 +1,37 @@
+{
+  "requete": "Comment mettre en place l'IA dans votre TPE ou PME : guide pratique",
+  "marque": "kAIros",
+  "site": "www.kairos-digital.com",
+  "score_final": 7.8,
+  "score_editorial": 8.3,
+  "score_seo": 7.0,
+  "seuil_atteint": true,
+  "seuil": 7.0,
+  "iterations": 1,
+  "longueur_mots": 900,
+  "critiques": [
+    {
+      "categorie": "liens_references",
+      "gravite": "basse",
+      "note": 6,
+      "message": "Peu de liens externes. Une mention 'étude Google' et 'enquête OpinionWay' sans liens cliquables.",
+      "suggestion": "Ajouter des hyperliens vers les sources citées."
+    },
+    {
+      "categorie": "mots_cles",
+      "gravite": "basse",
+      "note": 7,
+      "message": "Les mots-clés sont présents mais concentrés en introduction et conclusion.",
+      "suggestion": "Disséminer 'IA pour TPE' et 'IA pour PME' dans les sections centrales."
+    }
+  ],
+  "suggestions_prioritaires": [
+    "Ajouter des hyperliens vers les études citées",
+    "Renforcer les mots-clés dans le corps de l'article"
+  ],
+  "logs": [
+    {"phase": "brief", "statut": "ok"},
+    {"phase": "redaction", "statut": "ok", "version": 1},
+    {"phase": "critique", "statut": "ok", "iteration": 1, "score": 7.8}
+  ]
+}

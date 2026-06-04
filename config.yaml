@@ -1,0 +1,20 @@
+api:
+  model: "deepseek-chat"
+  temperature: 0.7
+  max_tokens_per_call: 4096
+  timeout: 30
+  retry_attempts: 2
+
+pipeline:
+  max_iterations: 3
+  score_seuil: 7.0
+  timeout_global: 120
+
+logging:
+  niveau: INFO
+  fichier: ./logs/pipeline.log
+  format: json
+
+sortie:
+  format: markdown
+  dossier: ./output

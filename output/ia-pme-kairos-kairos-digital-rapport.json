@@ -1,0 +1,64 @@
+{
+  "requete": "Pourquoi les TPE/PME du Sud de la France doivent passer à l'IA",
+  "marque": "kAIros",
+  "site": "www.kairos-digital.com",
+  "score_final": 7.4,
+  "score_editorial": 8.0,
+  "score_seo": 6.8,
+  "seuil_atteint": true,
+  "seuil": 7.0,
+  "iterations": 1,
+  "longueur_mots": 780,
+  "critiques": [
+    {
+      "categorie": "liens_references",
+      "gravite": "moyenne",
+      "note": 5,
+      "message": "Un seul lien externe (vers le site kAIros). Aucune source ou étude citée.",
+      "suggestion": "Ajouter 2-3 liens vers des études (ex: étude Bpifrance sur l'IA, article Les Echos) ou ressources complémentaires."
+    },
+    {
+      "categorie": "mots_cles",
+      "gravite": "basse",
+      "note": 7,
+      "message": "Les mots-clés principaux sont présents mais pourraient être renforcés dans le corps de l'article.",
+      "suggestion": "Ajouter 'IA pour TPE' et 'IA pour PME' une fois chacun dans les sections 'Comment démarrer' et 'Conclusion'."
+    },
+    {
+      "categorie": "comment_demarrer",
+      "gravite": "basse",
+      "note": 7,
+      "message": "La section 'Comment démarrer' est concise (5 étapes) mais mériterait d'être développée avec des exemples plus précis.",
+      "suggestion": "Ajouter un exemple chiffré concret (ex: 'Un coiffeur à Aix a automatisé ses relances SMS avec un outil à 29 €/mois')."
+    }
+  ],
+  "suggestions_prioritaires": [
+    "Ajouter des liens vers des sources ou études externes",
+    "Renforcer légèrement la densité des mots-clés principaux",
+    "Développer la section 'Comment démarrer' avec un exemple chiffré"
+  ],
+  "logs": [
+    {
+      "phase": "strategie",
+      "statut": "ok",
+      "produit": "brief.json"
+    },
+    {
+      "phase": "recherche",
+      "statut": "ok",
+      "note": "Sources web non accessibles (paywall), rédaction basée sur les connaissances du modèle"
+    },
+    {
+      "phase": "redaction",
+      "statut": "ok",
+      "version": 1,
+      "fichier": "ia-pme-kairos.md"
+    },
+    {
+      "phase": "critique",
+      "statut": "ok",
+      "iteration": 1,
+      "score": 7.4
+    }
+  ]
+}

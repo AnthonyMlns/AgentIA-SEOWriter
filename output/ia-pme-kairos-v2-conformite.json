@@ -1,0 +1,116 @@
+{
+  "article": "IA pour TPE et PME : pourquoi l'intelligence artificielle est devenue un atout incontournable pour les entreprises du Sud de la France (v3)",
+  "analyse_conformite_google": {
+    "score_eeat": 8.0,
+    "score_semantique": 8.0,
+    "score_lisibilite": 9.0,
+    "score_featured_snippet": 9.0,
+    "score_maillage": 9.0,
+    "score_meta": 8.0,
+    "score_structure": 8.0,
+    "score_originalite": 8.0,
+    "score_global": 8.3,
+    "score_max": 10.0,
+    "conformite_atteinte": true,
+    "seuil": 7.0,
+    "detail_notes": {
+      "eeat": {
+        "note": 8,
+        "points_forts": [
+          "Date et auteur (équipe kAIros) explicites en haut d'article",
+          "Sources cliquables (Bpifrance, France Num, Salesforce, Google Cloud, Commission européenne)",
+          "Exemples localisés (artisan du Var, cabinet comptable Aix)",
+          "Image illustrative avec crédit kAIros + bloc 'À propos' en footer"
+        ],
+        "points_faibles": [
+          "Pas de biographie individuelle de l'auteur"
+        ]
+      },
+      "semantique": {
+        "note": 8,
+        "points_forts": [
+          "Variations lexicales : assistant virtuel, automatisation intelligente, IA générative, chatbots",
+          "Champs lexicaux : productivité, compétitivité, transformation, sécurité",
+          "Couverture correcte des synonymes sur la longueur de l'article"
+        ],
+        "points_faibles": []
+      },
+      "lisibilite": {
+        "note": 9,
+        "points_forts": [
+          "Phrases majoritairement courtes, paragraphes aérés",
+          "Tableau comparatif, auto-diagnostic, FAQ, listes à puces",
+          "Ton professionnel sans jargon technique"
+        ],
+        "points_faibles": []
+      },
+      "featured_snippet": {
+        "note": 9,
+        "points_forts": [
+          "Tableau avant/après des gains par tâche → snippet tableau exploitable",
+          "Auto-diagnostic : tableau à 5 questions avec scoring → snippet interactif",
+          "FAQ avec 4 questions au format Q/R → snippet position 0",
+          "Listes à puces nombreuses (freins, bénéfices, secteurs, étapes)"
+        ],
+        "points_faibles": []
+      },
+      "maillage": {
+        "note": 9,
+        "points_forts": [
+          "5 liens internes vers les articles 2, 3, 4, 5 + guide pratique",
+          "5 sources externes cliquables (Bpifrance, France Num, Salesforce, Google Cloud, Commission UE)",
+          "Bloc 'À propos' avec site kAIros"
+        ],
+        "points_faibles": []
+      },
+      "meta": {
+        "note": 8,
+        "points_forts": [
+          "Meta-description optimisée avec mots-clés",
+          "Titre H1 accrocheur avec mots-clés",
+          "Image avec balise alt descriptive"
+        ],
+        "points_faibles": [
+          "Pas de meta robots explicite"
+        ]
+      },
+      "structure": {
+        "note": 8,
+        "points_forts": [
+          "H1 → H2 → H3 hiérarchie claire",
+          "Sections logiques : intro → freins → bénéfices → secteurs → démarrer → auto-diagnostic → FAQ → conclusion",
+          "Auto-diagnostic et FAQ bien positionnés avant conclusion"
+        ],
+        "points_faibles": []
+      },
+      "originalite": {
+        "note": 8,
+        "points_forts": [
+          "Auto-diagnostic à 5 questions avec scoring → format unique",
+          "Tableau avant/après des gains → rare sur ce type d'article",
+          "Ancrage local fort (villes, régions, exemples concrets)",
+          "Signature kAIros distinctive"
+        ],
+        "points_faibles": []
+      }
+    },
+    "poids_criteres": {
+      "eeat": 2,
+      "semantique": 2,
+      "lisibilite": 1,
+      "featured_snippet": 1,
+      "maillage": 1,
+      "meta": 1,
+      "structure": 1,
+      "originalite": 1
+    },
+    "calcul_score": "(8×2 + 8×2 + 9×1 + 9×1 + 9×1 + 8×1 + 8×1 + 8×1) / 10 = 8.3"
+  },
+  "recommandations_prioritaires": [
+    {
+      "categorie": "eeat",
+      "gravite": "basse",
+      "action": "Ajouter une biographie individuelle ou un lien page auteur kAIros"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [".opencode/AGENTS.md"],
+  "command": {
+    "rediger-article": {
+      "description": "Lance le pipeline SEO multi-agents (Stratégie → Recherche → Rédaction → Critique) pour produire un article optimisé",
+      "prompt": "Exécute le pipeline complet de rédaction SEO décrit dans .opencode/AGENTS.md. Suis chaque étape : brief, recherche, rédaction, critique avec boucle de feedback. Produis les fichiers de sortie dans ./output/."
+    }
+  },
+  "agent": {
+    "seo-redacteur": {
+      "description": "Agent spécialisé dans la rédaction SEO. Utilise le pipeline multi-agents : Stratégie → Recherche → Rédaction → Critique.",
+      "mode": "primary",
+      "model": "deepseek/deepseek-chat",
+      "permission": {
+        "read": "allow",
+        "write": "allow",
+        "edit": "allow",
+        "bash": "allow",
+        "webfetch": "allow",
+        "glob": "allow",
+        "grep": "allow"
+      }
+    }
+  }
+}
