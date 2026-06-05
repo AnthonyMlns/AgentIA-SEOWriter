@@ -5,8 +5,8 @@ from src.models import BriefSEO
 
 
 class AgentStrategie(Agent):
-    def __init__(self, client):
-        super().__init__(client, "strategie")
+    def __init__(self):
+        super().__init__("strategie")
 
     def system_prompt(self) -> str:
         return (

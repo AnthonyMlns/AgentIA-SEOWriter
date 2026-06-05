@@ -1,8 +1,8 @@
+import json
+import sys
 import typer
-from typing import Optional
 
 from src.config import Config
-from src.client import DeepSeekClient
 from src.logger import setup_logging
 from src.agents.strategie import AgentStrategie
 from src.agents.recherche import AgentRecherche
@@ -12,6 +12,15 @@ from src.orchestrator import Orchestrator
 
 
 app = typer.Typer()
+
+
+def _repondre_via_stdin(system_prompt: str, user_prompt: str) -> str:
+    payload = json.dumps({
+        "system": system_prompt,
+        "user": user_prompt,
+    })
+    print(payload, flush=True)
+    return sys.stdin.readline().strip()
 
 
 @app.command()
@@ -36,21 +45,14 @@ def run(
     log = setup_logging(cfg)
     log.info({"event": "cli_start", "requete": requete})
 
-    if not cfg.api_key:
-        typer.echo("Erreur : DEEPSEEK_API_KEY non définie. "
-                   "Créez un fichier .env à partir de .env.example")
-        raise typer.Exit(1)
-
     if not requete.strip():
         typer.echo("Erreur : la requête ne peut pas être vide.")
         raise typer.Exit(1)
 
-    client = DeepSeekClient(cfg.api_config)
-
-    agent_strategie = AgentStrategie(client)
-    agent_recherche = AgentRecherche(client)
-    agent_redaction = AgentRedaction(client)
-    agent_critique = AgentCritique(client)
+    agent_strategie = AgentStrategie()
+    agent_recherche = AgentRecherche()
+    agent_redaction = AgentRedaction()
+    agent_critique = AgentCritique()
 
     orchestrator = Orchestrator(
         config=cfg,
@@ -64,6 +66,7 @@ def run(
 
     resultat = orchestrator.executer(
         requete=requete,
+        repondre=_repondre_via_stdin,
         mots_cles=mots_cles,
         ton=ton,
         longueur=longueur,

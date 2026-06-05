@@ -5,8 +5,8 @@ from src.models import Draft, BriefSEO, Synthese
 
 
 class AgentRedaction(Agent):
-    def __init__(self, client):
-        super().__init__(client, "redaction")
+    def __init__(self):
+        super().__init__("redaction")
 
     def system_prompt(self) -> str:
         return (

@@ -1,11 +1,12 @@
 # AgentIA - SEO Writer
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue)](https://python.org)
-[![DeepSeek](https://img.shields.io/badge/model-deepseek--v4--flash-green)](https://deepseek.com)
 [![OpenCode](https://img.shields.io/badge/cli-opencode-purple)](https://opencode.ai)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 Pipeline multi-agents de rédaction SEO. Génère des articles optimisés pour le référencement via une orchestration automatisée : stratégie → recherche → rédaction → critique → conformité Google.
+
+Exécutable directement **via OpenCode** (sans dépendances Python) ou en Python.
 
 ## Fonctionnalités
 
@@ -14,17 +15,22 @@ Pipeline multi-agents de rédaction SEO. Génère des articles optimisés pour l
 - Rédaction avec boucle d'amélioration (critique → correction, max 3 itérations)
 - Évaluation SEO (10 critères pondérés, seuil 7/10)
 - Conformité Google (E-E-A-T, sémantique, lisibilité, featured snippet)
-- Pipeline exécutable via OpenCode (sans dépendances) ou en Python
 
 ## Utilisation
 
 ### Via OpenCode (recommandé)
 
 ```bash
-opencode --agent seo "Rédige un article SEO sur [sujet]"
+opencode "Rédige un article SEO sur [sujet]"
 ```
 
-Ou simplement "Rédige un article SEO sur..." — le skill se déclenche automatiquement.
+Ou avec des options avancées :
+
+```bash
+opencode --agent seo-writer "Rédige un article SEO sur l'IA générative"
+```
+
+Le skill SEO se déclenche automatiquement sur les requêtes contenant "article SEO".
 
 ### Via CLI Python
 
@@ -34,6 +40,8 @@ python main.py "Rédige un article SEO sur [sujet]" \
   --ton professionnel \
   --longueur 1200-1500
 ```
+
+Le mode CLI lit les réponses LLM sur l'entrée standard (format JSON `{"system": "...", "user": "..."}` par ligne).
 
 ### Options
 
@@ -56,9 +64,9 @@ python -m venv .venv
 .venv\Scripts\activate
 
 pip install -r requirements.txt
-cp .env.example .env
-# Éditer .env : ajouter DEEPSEEK_API_KEY
 ```
+
+Aucune clé API nécessaire — OpenCode utilise son propre LLM configuré.
 
 ## Architecture
 
@@ -72,7 +80,8 @@ Utilisateur → Agent Stratégie → Agent Recherche → Agent Rédaction
                                               Article .md + Rapport .json
 ```
 
-Détail complet dans [ARCHITECTURE.md](ARCHITECTURE.md).
+Le pipeline est défini comme un agent OpenCode natif dans `.opencode/agents/seo-writer.md`.
+Le skill `.opencode/skills/seo/SKILL.md` détecte automatiquement les requêtes SEO.
 
 ## Roadmap
 
@@ -83,10 +92,6 @@ Détail complet dans [ARCHITECTURE.md](ARCHITECTURE.md).
 - [ ] Mode planification de contenu (calendrier éditorial)
 - [ ] CI/CD — tests automatisés + lint
 - [ ] Dashboard de suivi des performances SEO
-
-## Contribuer
-
-Les contributions sont les bienvenues ! Voir [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Licence
 

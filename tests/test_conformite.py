@@ -3,7 +3,6 @@ import pytest
 from unittest.mock import MagicMock
 
 from src.config import Config
-from src.client import DeepSeekClient
 from src.models import BriefSEO, Synthese, Draft, RapportConformiteGoogle
 from src.agents.conformite import AgentConformiteGoogle
 from src.agents.strategie import AgentStrategie
@@ -13,9 +12,15 @@ from src.agents.critique import AgentCritique
 from src.orchestrator import Orchestrator
 
 
+def _build_repondre(reponses: list[str]):
+    iterator = iter(reponses)
+    def repondre(system: str, user: str) -> str:
+        return next(iterator)
+    return repondre
+
+
 def test_agent_conformite_parser():
-    client = MagicMock(spec=DeepSeekClient)
-    agent = AgentConformiteGoogle(client)
+    agent = AgentConformiteGoogle()
 
     reponse_json = json.dumps({
         "score_eeat": 7.0,
@@ -68,12 +73,11 @@ def test_orchestrator_avec_conformite():
     config.score_seuil = 7.0
     config.sortie_dossier = "./output"
 
-    mock_client = MagicMock(spec=DeepSeekClient)
-    agent_strategie = AgentStrategie(mock_client)
-    agent_recherche = AgentRecherche(mock_client)
-    agent_redaction = AgentRedaction(mock_client)
-    agent_critique = AgentCritique(mock_client)
-    agent_conformite = AgentConformiteGoogle(mock_client)
+    agent_strategie = AgentStrategie()
+    agent_recherche = AgentRecherche()
+    agent_redaction = AgentRedaction()
+    agent_critique = AgentCritique()
+    agent_conformite = AgentConformiteGoogle()
 
     strategie_json = json.dumps({
         "requete": "test",
@@ -112,7 +116,6 @@ def test_orchestrator_avec_conformite():
         "suggestions_prioritaires": ["Ajouter des sources d'autorité"],
     })
 
-    # Retourne la conformité avec un score bas la 1ère fois, ok la 2ème
     conformite_json_bon = json.dumps({
         "score_eeat": 8.0, "score_semantique": 7.0,
         "score_lisibilite": 8.0, "score_featured_snippet": 7.0,
@@ -122,11 +125,11 @@ def test_orchestrator_avec_conformite():
         "recommandations": [], "suggestions_prioritaires": [],
     })
 
-    mock_client.chat.side_effect = [
+    repondre = _build_repondre([
         strategie_json, recherche_json,
         redaction_json, critique_json, conformite_json,
         redaction_json, critique_json, conformite_json_bon,
-    ]
+    ])
 
     orchestrator = Orchestrator(
         config=config,
@@ -137,6 +140,6 @@ def test_orchestrator_avec_conformite():
         agent_conformite=agent_conformite,
     )
 
-    resultat = orchestrator.executer(requete="test")
+    resultat = orchestrator.executer(requete="test", repondre=repondre)
     assert resultat["score_conformite"] is not None
     assert resultat["iterations"] >= 1

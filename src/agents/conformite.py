@@ -5,8 +5,8 @@ from src.models import RapportConformiteGoogle, Draft, BriefSEO
 
 
 class AgentConformiteGoogle(Agent):
-    def __init__(self, client):
-        super().__init__(client, "conformite_google")
+    def __init__(self):
+        super().__init__("conformite_google")
 
     def system_prompt(self) -> str:
         return (

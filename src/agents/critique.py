@@ -5,8 +5,8 @@ from src.models import RapportCritique, Draft, BriefSEO
 
 
 class AgentCritique(Agent):
-    def __init__(self, client):
-        super().__init__(client, "critique")
+    def __init__(self):
+        super().__init__("critique")
 
     def system_prompt(self) -> str:
         return (

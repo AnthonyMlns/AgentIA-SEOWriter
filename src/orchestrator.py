@@ -1,6 +1,8 @@
 import time
+import json
 import logging
 from pathlib import Path
+from typing import Callable
 
 from src.models import BriefSEO, Synthese, Draft, RapportCritique, RapportConformiteGoogle
 from src.agents.strategie import AgentStrategie
@@ -26,22 +28,28 @@ class Orchestrator:
         self.agent_critique = agent_critique
         self.agent_conformite = agent_conformite
 
-    def executer(self, requete: str, mots_cles: str = "",
-                 ton: str = "", longueur: str = "",
+    def executer(self, requete: str, repondre: Callable[[str, str], str],
+                 mots_cles: str = "", ton: str = "", longueur: str = "",
                  audience: str = "", sources: list[str] | None = None,
                  avec_conformite_google: bool = True) -> dict:
         debut = time.time()
         logger.info({"event": "pipeline_start", "requete": requete})
 
         try:
-            brief = self.agent_strategie.executer(
+            system = self.agent_strategie.system_prompt()
+            user = self.agent_strategie.formatter_entree(
                 requete=requete, mots_cles=mots_cles,
                 ton=ton, longueur=longueur, audience=audience,
             )
+            reponse = repondre(system, user)
+            brief = self.agent_strategie.parser_sortie(reponse)
             logger.info({"event": "brief_genere",
                          "mots_cles_principaux": brief.mots_cles_principaux})
 
-            synthese = self.agent_recherche.executer(brief=brief, sources=sources)
+            system = self.agent_recherche.system_prompt()
+            user = self.agent_recherche.formatter_entree(brief=brief, sources=sources)
+            reponse = repondre(system, user)
+            synthese = self.agent_recherche.parser_sortie(reponse, brief=brief)
             logger.info({"event": "synthese_generee",
                          "sources": len(synthese.sources),
                          "insights": len(synthese.insights_cles)})
@@ -57,15 +65,22 @@ class Orchestrator:
                     historique_critiques[-1]["suggestions_prioritaires"]
                     if historique_critiques else None
                 )
-                draft = self.agent_redaction.executer(
+                system = self.agent_redaction.system_prompt()
+                user = self.agent_redaction.formatter_entree(
                     brief=brief, synthese=synthese,
-                    critiques=critiques_pour_redaction,
-                    version=iteration,
+                    critiques=critiques_pour_redaction, version=iteration,
+                )
+                reponse = repondre(system, user)
+                draft = self.agent_redaction.parser_sortie(
+                    reponse, brief=brief, synthese=synthese, version=iteration,
                 )
                 logger.info({"event": "draft_produit", "version": iteration,
                              "titre": draft.titre})
 
-                rapport = self.agent_critique.executer(draft=draft, brief=brief)
+                system = self.agent_critique.system_prompt()
+                user = self.agent_critique.formatter_entree(draft=draft, brief=brief)
+                reponse = repondre(system, user)
+                rapport = self.agent_critique.parser_sortie(reponse, draft=draft)
                 logger.info({"event": "critique_result",
                              "iteration": iteration,
                              "score": rapport.score_global,
@@ -74,9 +89,10 @@ class Orchestrator:
                 suggestions = list(rapport.suggestions_prioritaires)
 
                 if avec_conformite_google and self.agent_conformite:
-                    conformite = self.agent_conformite.executer(
-                        draft=draft, brief=brief
-                    )
+                    system = self.agent_conformite.system_prompt()
+                    user = self.agent_conformite.formatter_entree(draft=draft, brief=brief)
+                    reponse = repondre(system, user)
+                    conformite = self.agent_conformite.parser_sortie(reponse, draft=draft)
                     logger.info({"event": "conformite_result",
                                  "iteration": iteration,
                                  "score": conformite.score_global,
@@ -178,7 +194,6 @@ class Orchestrator:
                 "recommandations": meilleur_conformite.recommandations,
             }
 
-        import json
         chemin_json = dossier / f"{nom_base}-rapport.json"
         chemin_json.write_text(json.dumps(rapport_data, ensure_ascii=False, indent=2), encoding="utf-8")
 

@@ -3,7 +3,6 @@ import pytest
 from unittest.mock import MagicMock
 
 from src.config import Config
-from src.client import DeepSeekClient
 from src.models import BriefSEO, Synthese, Draft, RapportCritique
 from src.agents.strategie import AgentStrategie
 from src.agents.recherche import AgentRecherche
@@ -21,21 +20,21 @@ def config():
     return cfg
 
 
-@pytest.fixture
-def mock_client():
-    client = MagicMock(spec=DeepSeekClient)
-    client.chat.return_value = '{"ok": true}'
-    return client
+def _build_repondre(reponses: list[str]):
+    iterator = iter(reponses)
+    def repondre(system: str, user: str) -> str:
+        return next(iterator)
+    return repondre
 
 
-def test_orchestrator_pipeline_complet(config, mock_client):
-    agent_strategie = AgentStrategie(mock_client)
-    agent_recherche = AgentRecherche(mock_client)
-    agent_redaction = AgentRedaction(mock_client)
-    agent_critique = AgentCritique(mock_client)
+def test_orchestrator_pipeline_complet(config):
+    agent_strategie = AgentStrategie()
+    agent_recherche = AgentRecherche()
+    agent_redaction = AgentRedaction()
+    agent_critique = AgentCritique()
 
-    mock_client.chat.side_effect = [
-        json_strategie := json.dumps({
+    repondre = _build_repondre([
+        json.dumps({
             "requete": "test ia",
             "mots_cles_principaux": ["ia", "pme"],
             "mots_cles_secondaires": ["automatisation"],
@@ -44,19 +43,19 @@ def test_orchestrator_pipeline_complet(config, mock_client):
             "ton": "vulgarisation",
             "audience_cible": "dirigeants",
         }),
-        json_recherche := json.dumps({
+        json.dumps({
             "sources": [{"url": "https://exemple.com", "titre": "Test",
                           "extrait": "...", "pertinence": 0.9}],
             "documents_fournis": None,
             "insights_cles": ["insight 1"],
             "lacunes_identifiees": ["lacune 1"],
         }),
-        json_redaction := json.dumps({
+        json.dumps({
             "titre": "Article test",
             "sections": {"intro": "contenu"},
             "meta_description": "description test",
         }),
-        json_critique := json.dumps({
+        json.dumps({
             "score_editorial": 7.5,
             "score_seo": 7.0,
             "score_global": 7.3,
@@ -64,7 +63,7 @@ def test_orchestrator_pipeline_complet(config, mock_client):
             "critiques": [],
             "suggestions_prioritaires": [],
         }),
-    ]
+    ])
 
     orchestrator = Orchestrator(
         config=config,
@@ -76,6 +75,7 @@ def test_orchestrator_pipeline_complet(config, mock_client):
 
     resultat = orchestrator.executer(
         requete="test ia",
+        repondre=repondre,
         mots_cles="ia,pme",
         ton="vulgarisation",
     )
@@ -87,11 +87,11 @@ def test_orchestrator_pipeline_complet(config, mock_client):
     assert "chemin_rapport" in resultat
 
 
-def test_orchestrator_boucle_feedback(config, mock_client):
-    agent_strategie = AgentStrategie(mock_client)
-    agent_recherche = AgentRecherche(mock_client)
-    agent_redaction = AgentRedaction(mock_client)
-    agent_critique = AgentCritique(mock_client)
+def test_orchestrator_boucle_feedback(config):
+    agent_strategie = AgentStrategie()
+    agent_recherche = AgentRecherche()
+    agent_redaction = AgentRedaction()
+    agent_critique = AgentCritique()
 
     strategie_json = json.dumps({
         "requete": "test",
@@ -128,11 +128,11 @@ def test_orchestrator_boucle_feedback(config, mock_client):
         "critiques": [], "suggestions_prioritaires": [],
     })
 
-    mock_client.chat.side_effect = [
+    repondre = _build_repondre([
         strategie_json, recherche_json,
         redaction_json, critique_mauvais,
         redaction_json, critique_bon,
-    ]
+    ])
 
     orchestrator = Orchestrator(
         config=config,
@@ -142,6 +142,6 @@ def test_orchestrator_boucle_feedback(config, mock_client):
         agent_critique=agent_critique,
     )
 
-    resultat = orchestrator.executer(requete="test")
+    resultat = orchestrator.executer(requete="test", repondre=repondre)
     assert resultat["iterations"] == 2
     assert resultat["seuil_atteint"] is True

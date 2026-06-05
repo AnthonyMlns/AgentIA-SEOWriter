@@ -7,4 +7,6 @@ logs/
 
 # Output generated articles
 output/
-# OpenCode local settings.claude/settings.local.json
+
+# OpenCode local settings
+.claude/settings.local.json
